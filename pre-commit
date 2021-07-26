@@ -1,0 +1,9 @@
+#!/bin/sh
+OUTPUT=$( git diff --cached --name-status | grep -oP '[^M\s\r\n]+' | sed ':b;$!{N;bb};s/\n/","/g');
+DATA="$(cat <<EOF
+["$OUTPUT"]
+EOF
+)";
+echo "$DATA";
+curl  -k -X POST "https://localhost:5001/Hook/PushFiles" -H "Content-Type: application/json" --data "$DATA" 
+exit 0
